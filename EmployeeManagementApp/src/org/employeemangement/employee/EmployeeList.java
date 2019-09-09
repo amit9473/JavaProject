@@ -2,6 +2,7 @@ package org.employeemangement.employee;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -30,7 +31,8 @@ public class EmployeeList extends GenericServlet
 	{
 		PrintWriter out = res.getWriter();
 				
-		resultSet = list();
+		//resultSet = list();
+		resultSet = adminList();
 		
 		try 
 		{
@@ -44,11 +46,14 @@ public class EmployeeList extends GenericServlet
 				String first_name = resultSet.getString("first_name");
 				String middle_name = resultSet.getString("middle_name");
 				String last_name = resultSet.getString("last_name");
-				String sex = resultSet.getString("sex");
-				String department = resultSet.getString("department");
-				String manager = resultSet.getString("manager");
+				//String sex = resultSet.getString("sex");
+				//String department = resultSet.getString("department");
+				//String manager = resultSet.getString("manager");
 				String phone_number = resultSet.getString("phone_number");
 				String email_id = resultSet.getString("email_id");
+				String username = resultSet.getString("username");
+				String password = resultSet.getString("password");
+				 /*		
 				if(middle_name.equals("na"))
 				{
 					out.format("%-4d %-30s %-8s %-25s %-15s %-15s %-30s", emp_id, first_name+" "+last_name, sex, department, manager, phone_number, email_id);
@@ -59,7 +64,18 @@ public class EmployeeList extends GenericServlet
 					out.format("%-4d %-30s %-8s %-25s %-15s %-15s %-30s", emp_id, first_name+" "+middle_name+" "+last_name, sex, department, manager, phone_number, email_id);
 					out.println();
 				}
-					
+				*/
+				
+				if(strCheck(middle_name))
+				{
+					out.format("%-4d %-30s %-15s %-15s %-15s %-30s", emp_id, first_name+" "+last_name, username, password, phone_number, email_id);
+					out.println();
+				}
+				else
+				{
+					out.format("%-4d %-30s %-15s %-15s %-15s %-30s", emp_id, first_name+" "+middle_name+" "+last_name, username, password, phone_number, email_id);
+					out.println();
+				}
 			}
 			out.println("----------------------------------------------------------------------------------------------------------------------");
 		} 
@@ -105,6 +121,32 @@ public class EmployeeList extends GenericServlet
 			e.printStackTrace();
 		}
 		return resultSet;
+	}
+	
+	public ResultSet adminList()
+	{
+		String sql = "{call emp_mng_sys.procedure()}";
+
+		try 
+		{
+			connection = DriverManager.getConnection(url);
+			
+			CallableStatement callableStatement = connection.prepareCall(sql);
+			
+			resultSet = callableStatement.executeQuery();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return resultSet;
+	}
+	
+	private static boolean strCheck(String s)
+	{
+		if(s == null || s.isEmpty())
+			return true;
+		return false;
 	}
 	
 }

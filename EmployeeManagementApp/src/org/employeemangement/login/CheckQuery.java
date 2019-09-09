@@ -15,9 +15,10 @@ public class CheckQuery
 	
 	public static ResultSet check()
 	{
-		String sql = "select admin_list.admin_id, admin_list.admin_password, employee_list.phone_number, employee_list.email_id "+
-				     "from emp_mng_sys.admin_list, emp_mng_sys.employee_list "+ 
-				     "where admin_list.admin_emp_id=employee_list.emp_id;";
+		String sql = "select first_name, middle_name, last_name, admin_id as username, admin_password as password, phone_number, email_id "+
+				     "from emp_mng_sys.admin_list "+ 
+				     "join emp_mng_sys.employee_list " + 
+				     "on admin_list.admin_emp_id = employee_list.emp_id;";
 		try 
 		{
 			Class.forName("com.mysql.jdbc.Driver");
@@ -31,4 +32,43 @@ public class CheckQuery
 		}
 		return resultSet;
 	}
+	
+	/*
+	public static void main(String[] args) 
+	{
+		resultSet = check();
+		try
+		{
+			while(resultSet.next())
+			{
+				String mName = resultSet.getString("middle_name");
+				if(strCheck(mName))
+					System.out.println("1");
+			}
+		} 
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try 
+			{
+				connection.close();
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private static boolean strCheck(String s)
+	{
+		if(s == null || s.isEmpty())
+			return true;
+		return false;
+	}
+	*/
+	
 }

@@ -13,7 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 
 @SuppressWarnings("serial")
-@WebServlet("/InsertEmployeeDetails")
+@WebServlet("/welcome")
 public class InsertEmployeeDetails extends GenericServlet 
 {
 
@@ -25,7 +25,11 @@ public class InsertEmployeeDetails extends GenericServlet
 	@Override
 	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException 
 	{
-		
+
+		PrintWriter out = res.getWriter();
+		String name = (String)req.getAttribute("name");
+		out.println("welcome: " + name);
+		String lan = null;
 		int count = 0;
 		String firstName = req.getParameter("fn");
 		String middleName = req.getParameter("mn");
@@ -35,9 +39,14 @@ public class InsertEmployeeDetails extends GenericServlet
 		int mgrId = Integer.parseInt(req.getParameter("mi"));
 		String phoneNumber = req.getParameter("pn");
 		String emailId = req.getParameter("ei");
+		String[] lang = req.getParameterValues("lang");
+		
+		for (String ln : lang)
+		{
+			ln = ln + lan;
+		}
 		
 		resultSet = CheckInfo.check();
-		PrintWriter out = res.getWriter();
 		
 		try 
 		{

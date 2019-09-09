@@ -7,15 +7,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
 @WebServlet("/UpdatePassword")
-public class UpdatePassword extends GenericServlet
+public class UpdatePassword extends HttpServlet
 {
 	
 	String url = "jdbc:mysql://localhost:3306?user=root&password=12345";
@@ -24,7 +24,7 @@ public class UpdatePassword extends GenericServlet
 	ResultSet resultSet = null;
 	
 	@Override
-	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		int count = 0;
 		String userName = req.getParameter("un");

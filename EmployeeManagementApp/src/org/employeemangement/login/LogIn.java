@@ -6,16 +6,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.GenericServlet;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @SuppressWarnings("serial")
 @WebServlet("/LogIn")
-public class LogIn extends GenericServlet
+public class LogIn extends HttpServlet
 {
 
 	String url = "jdbc:mysql://localhost:3306?user=root&password=12345";
@@ -24,7 +25,7 @@ public class LogIn extends GenericServlet
 	Connection connection = null;
 	
 	@Override
-	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		int count = 0;
 		
@@ -39,17 +40,25 @@ public class LogIn extends GenericServlet
 		{
 			while(resultSet.next())
 			{
-				String queryAdminId = resultSet.getString("admin_id");
-				String queryPassword = resultSet.getString("admin_password");
+				String fName = resultSet.getString("first_name");
+				String mName = resultSet.getString("middle_name");
+				String lName = resultSet.getString("last_name");
+				String queryAdminId = resultSet.getString("username");
+				String queryPassword = resultSet.getString("password");
 				String queryphoneNumber = resultSet.getString("phone_number");
 				String queryemailID = resultSet.getString("email_id");
 				
 				if(adminId.equals(queryAdminId) || phoneNumber.equals(queryphoneNumber) || emailID.equals(queryemailID))
 				{
 					count++;
+					
 					if(queryPassword.equals(adminPassword))
 					{
-						out.println("Login Successful");
+						String name = null;
+						if(strCheck(mName))
+							name = fName+" "+lName;
+						else
+							name = fName+" "+mName+" "+lName;
 					}
 					else
 						out.println("Invalid Password");
@@ -62,18 +71,25 @@ public class LogIn extends GenericServlet
 		{
 			e.printStackTrace();
 		}
-		finally
-		{
-			try 
-			{
-				connection.close();
-			} 
-			catch (SQLException e) 
-			{
-				e.printStackTrace();
-			}
-		}
+//		finally
+//		{
+//			try 
+//			{
+//				connection.close();
+//			} 
+//			catch (SQLException e) 
+//			{
+//				e.printStackTrace();
+//			}
+//		}
 		
+	}
+	
+	private static boolean strCheck(String s)
+	{
+		if(s == null || s.isEmpty())
+			return true;
+		return false;
 	}
 
 }
